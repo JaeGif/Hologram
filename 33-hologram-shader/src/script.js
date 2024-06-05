@@ -8,7 +8,8 @@ import fragmentShader from './shaders/fragment.glsl';
  * Base
  */
 // Debug
-const gui = new GUI();
+let gui;
+if (window.location.hash === '#debug') gui = new GUI();
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
@@ -72,9 +73,10 @@ renderer.setClearColor(rendererParameters.clearColor);
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-gui.addColor(rendererParameters, 'clearColor').onChange(() => {
-  renderer.setClearColor(rendererParameters.clearColor);
-});
+if (gui)
+  gui.addColor(rendererParameters, 'clearColor').onChange(() => {
+    renderer.setClearColor(rendererParameters.clearColor);
+  });
 
 /**
  * Material
@@ -82,9 +84,10 @@ gui.addColor(rendererParameters, 'clearColor').onChange(() => {
 
 const materialParameters = {};
 materialParameters.color = '#70c1ff';
-gui.addColor(materialParameters, 'color').onChange((color) => {
-  material.uniforms.uColor.value.set(materialParameters.color);
-});
+if (gui)
+  gui.addColor(materialParameters, 'color').onChange((color) => {
+    material.uniforms.uColor.value.set(materialParameters.color);
+  });
 
 const material = new THREE.ShaderMaterial({
   vertexShader,
