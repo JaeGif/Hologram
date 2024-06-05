@@ -113,11 +113,6 @@ const torusKnot = new THREE.Mesh(
 torusKnot.position.x = 3;
 scene.add(torusKnot);
 
-// Sphere
-const sphere = new THREE.Mesh(new THREE.SphereGeometry(), material);
-sphere.position.x = -3;
-scene.add(sphere);
-
 // Suzanne
 let suzanne = null;
 gltfLoader.load('./suzanne.glb', (gltf) => {
@@ -125,7 +120,24 @@ gltfLoader.load('./suzanne.glb', (gltf) => {
   suzanne.traverse((child) => {
     if (child.isMesh) child.material = material;
   });
+  suzanne.position.x = -3;
+
   scene.add(suzanne);
+});
+const tridentGroup = new THREE.Group();
+scene.add(tridentGroup);
+let trident = null;
+gltfLoader.load('./trident.glb', (gltf) => {
+  trident = gltf.scene;
+  trident.traverse((child) => {
+    if (child.isMesh) child.material = material;
+  });
+  trident.scale.set(0.04, 0.04, 0.04);
+  trident.position.x = 0;
+  trident.position.z = 0;
+
+  trident.position.y = -4;
+  tridentGroup.add(trident);
 });
 
 /**
@@ -142,8 +154,10 @@ const tick = () => {
     suzanne.rotation.y = elapsedTime * 0.2;
   }
 
-  sphere.rotation.x = -elapsedTime * 0.1;
-  sphere.rotation.y = elapsedTime * 0.2;
+  if (tridentGroup) {
+    tridentGroup.rotation.x = -elapsedTime * 0.1;
+    tridentGroup.rotation.y = elapsedTime * 0.2;
+  }
 
   torusKnot.rotation.x = -elapsedTime * 0.1;
   torusKnot.rotation.y = elapsedTime * 0.2;
